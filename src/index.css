@@ -2,3 +2,44 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+#title {
+  text-align: center;
+  font-family: Georgia, serif;
+}
+#button {
+  background-color: #FFFAF0;
+  color: black;
+  border: 2px solid #ddd;
+
+
+}
+
+
+#results {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border: 3px solid #ddd;
+  width: 100%;
+}
+
+#results td, #results th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#results tr:nth-child(even){background-color: #f2f2f2;}
+
+#results tr:hover {background-color: #FFFAFA;}
+
+#results th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #E6E6FA;
+  color: #000000;
+}
+
+
+

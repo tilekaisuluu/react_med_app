@@ -53,7 +53,7 @@ function App() {
     const handleChange = e => {
         setSearchTerm(e.target.value);
     };
-
+    // state for modal window 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
 
 
@@ -64,9 +64,11 @@ function App() {
         e.preventDefault();
         // json data
         const drugsDataStr = JSON.stringify(drugsData);
+        // parsed Json data 
         const parsedDrugsData = JSON.parse(drugsDataStr)
         // results element filter drugs and converts string  to lowercase with method toLowerCase 
-        const results = parsedDrugsData.medications.filter(({ medication_name }) => medication_name.toLowerCase().includes(searchTerm));
+        const results = parsedDrugsData.medications.filter(
+            ({ medication_name }) => medication_name.toLowerCase().includes(searchTerm))
         // filtered list is set on the searchResults using setSearchResults
         setSearchResults(results);
         // whenever in searchTerm array something changed the first argument of React.useCallback hook is executes
@@ -75,32 +77,52 @@ function App() {
 
 
 
-
-
     return (
-        // onSubmit attribute call onButtonClick when the form is submitted
+        <div>
+            <h1 id='title'>Side FX</h1>
         <form onSubmit={onButtonClick} className="App">
             {/* input field where onChange attribute call handleChange method  */}
             <input onChange={handleChange} type="text" placeholder="Search" />
-            <button type="submit">Submit</button>
-            {/* searchResults.map function iterates through all searchResults and render it inside ul element, toString converts elements to string, return a li element for each item*/}
-            <ul className="list-group">
-            {searchResults.map(({ medication_name }) => (
-            <li key={medication_name.toString()} className="list-group-item disabled">{medication_name}</li>)
-            )}
-            <button onClick={() => setIsModalOpen(true)}>More Info</button>
-            {isModalOpen && (
-            <div>
-                <p>
-                    It's a modal
-              
-                </p>
-                <button onClick={() => setIsModalOpen(false)}>CLOSE MODAL</button>
-            </div>
-            )}
-            </ul>
+            <button type="submit" id="button">Submit</button>
+            {/* searchResults.map function iterates through all searchResults and render it inside ul element, return a li element for each medication name*/}
+          
+            <table id="results">
+                <thead>
+                    <tr>
+                    <th>Medication</th>
+                    <th>Manufacturer</th>
+                    <th>Date on market</th>
+                    </tr>
+                </thead>
+             <tbody>
+                 {searchResults.map(row => (
+                     <tr>
+                        <td>{row.medication_name}
+                           {/* click button to open modal window */}
+                            <button onClick={() => setIsModalOpen(true)} id="modal_button">More Info</button>
+                             {/* when modal is open  */}
+                            {isModalOpen && (
+                             <div>
+                                <p>
+                                Side effects: {}
+                                </p>
+                            {/* button to close modal window  */}
+                            <button onClick={() => setIsModalOpen(false)} id="modal_button">close</button>
+                            </div>
+                            )}
+                        </td>
+                        
+                        <td>{row.manufacturer}</td>
+                        <td>{row.date_on_market}</td>
+                     </tr>
+                )
+
+                )}
+             </tbody>
+            </table>
            {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre> */} 
-        </form>
+            </form>
+        </div>
     );
 }
 
@@ -108,42 +130,3 @@ const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
 
 
-
-
-/* toggle is the switch component
-const ToggleContent = ({ toggle, content }) => {
-    const [isShown, setIsShown] = React.useState(false);
-
-    const hide = () => setIsShown(false);
-
-    const show = () => setIsShown(true)
-
-    // React.Fragman let use multiple elements without adding nodes to the DOM
-    return (
-        <React.Fragment>
-          {toggle(show)}
-          {isShown && content(hide)}
-        </React.Fragment>
-      );
-    }
-const Modal = ({ children }) => (
-    ReactDOM.createPortal(
-    <div className="modal">
-        {children}
-        </div>,
-        document.getElementById('modal-root')
-        )
-        );
-
-
-<ToggleContent
-          toggle={show => <button onClick={show}>Open</button>}
-          content={hide => (
-            <Modal>
-              There is no spoon.<br/>
-              <button onClick={hide}>Close</button>
-            </Modal>
-          )}
-        />
-
-*/
