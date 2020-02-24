@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const drugsData = {
     "medications": [
         {
+            "id": 1,
             "medication_name": "abc",
             "manufacturer": "some company",
             "date_on_market": "01/10/1990",
@@ -26,6 +27,7 @@ const drugsData = {
             ]
         },
         {
+            "id": 2,
             "medication_name": "xyz",
             "manufacturer": "another company",
             "date_on_market": "02/10/2005",
@@ -54,11 +56,17 @@ function App() {
         setSearchTerm(e.target.value);
     };
     // state for modal window 
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    // const [isModalOpen, setIsModalOpen] = React.useState({
+    //     openDeleteModal: false,
+    //     activeItemName: '',
+    //     activeItemId: null,
+    // });
 
 
+    const [activeItemId, setActiveItemId] = React.useState(null);
+    const isModalOpen = !!activeItemId;
+    const activeItem = searchResults.find(searchResult => searchResult.id === activeItemId);
 
-    // 
     const onButtonClick = React.useCallback((e) => {
         // by default onsubmit is request thats why we need event prevent Default
         e.preventDefault();
@@ -76,51 +84,48 @@ function App() {
 
 
 
-
     return (
         <div>
             <h1 id='title'>Side FX</h1>
-        <form onSubmit={onButtonClick} className="App">
-            {/* input field where onChange attribute call handleChange method  */}
-            <input onChange={handleChange} type="text" placeholder="Search" />
-            <button type="submit" id="button">Submit</button>
-            {/* searchResults.map function iterates through all searchResults and render it inside ul element, return a li element for each medication name*/}
-          
-            <table id="results">
-                <thead>
-                    <tr>
-                    <th>Medication</th>
-                    <th>Manufacturer</th>
-                    <th>Date on market</th>
-                    </tr>
-                </thead>
-             <tbody>
-                 {searchResults.map(row => (
-                     <tr>
-                        <td>{row.medication_name}
-                           {/* click button to open modal window */}
-                            <button onClick={() => setIsModalOpen(true)} id="modal_button">More Info</button>
-                             {/* when modal is open  */}
-                            {isModalOpen && (
-                             <div>
-                                <p>
-                                Side effects: {}
-                                </p>
-                            {/* button to close modal window  */}
-                            <button onClick={() => setIsModalOpen(false)} id="modal_button">close</button>
-                            </div>
-                            )}
-                        </td>
-                        
-                        <td>{row.manufacturer}</td>
-                        <td>{row.date_on_market}</td>
-                     </tr>
-                )
+            <form onSubmit={onButtonClick} className="App">
+                {/* input field where onChange attribute call handleChange method  */}
+                <input onChange={handleChange} type="text" placeholder="Search" />
+                <button type="submit" id="button">Submit</button>
+                {/* searchResults.map function iterates through all searchResults and render it inside ul element, return a li element for each medication name*/}
+                <table id="results">
+                    <thead>
+                        <tr >
+                            <th>Medication</th>
+                            <th>Manufacturer</th>
+                            <th>Date on market</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {searchResults.map(row => (
+                            <tr key={row.id}>
+                                <td>{row.medication_name}
 
-                )}
-             </tbody>
-            </table>
-           {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre> */} 
+                                    {/* click button to open modal window */}
+                                    <button onClick={() => setActiveItemId(row.id)} id="modal_button">More Info</button>
+                                    {/* when modal is open  */}
+                                    {isModalOpen && (
+                                        <div>
+                                            <ul>{activeItem.medication_name}</ul>
+                                            {/* button to close modal window  */}
+                                            <button onClick={() => setActiveItemId(null)} id="modal_button">Close</button>
+                                        </div>
+                                    )}
+                                </td>
+
+                                <td>{row.manufacturer}</td>
+                                <td>{row.date_on_market}</td>
+                            </tr>
+                        )
+
+                        )}
+                    </tbody>
+                </table>
+                {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre> */}
             </form>
         </div>
     );
@@ -128,5 +133,3 @@ function App() {
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
-
-
