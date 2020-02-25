@@ -55,17 +55,16 @@ function App() {
     const handleChange = e => {
         setSearchTerm(e.target.value);
     };
-    // state for modal window 
-    // const [isModalOpen, setIsModalOpen] = React.useState({
-    //     openDeleteModal: false,
-    //     activeItemName: '',
-    //     activeItemId: null,
-    // });
 
 
+    // to get active id of medication(when we click to open modal)
     const [activeItemId, setActiveItemId] = React.useState(null);
+    // !! converts value to boolean true, when isModalOpen activeItemId is true 
     const isModalOpen = !!activeItemId;
+    // from serachresults find id which is equals to activeitemid 
     const activeItem = searchResults.find(searchResult => searchResult.id === activeItemId);
+    const activeItemStr = JSON.stringify(activeItem)
+
 
     const onButtonClick = React.useCallback((e) => {
         // by default onsubmit is request thats why we need event prevent Default
@@ -81,7 +80,6 @@ function App() {
         setSearchResults(results);
         // whenever in searchTerm array something changed the first argument of React.useCallback hook is executes
     }, [searchTerm]);
-
 
 
     return (
@@ -105,12 +103,13 @@ function App() {
                             <tr key={row.id}>
                                 <td>{row.medication_name}
 
-                                    {/* click button to open modal window */}
+                                    {/* click button to open modal window,  */}
+
                                     <button onClick={() => setActiveItemId(row.id)} id="modal_button">More Info</button>
                                     {/* when modal is open  */}
                                     {isModalOpen && (
                                         <div>
-                                            <ul>{activeItem.medication_name}</ul>
+                                            <ul>{activeItemStr}</ul>
                                             {/* button to close modal window  */}
                                             <button onClick={() => setActiveItemId(null)} id="modal_button">Close</button>
                                         </div>
