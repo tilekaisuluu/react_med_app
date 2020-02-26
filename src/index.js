@@ -59,12 +59,37 @@ function App() {
 
     // to get active id of medication(when we click to open modal)
     const [activeItemId, setActiveItemId] = React.useState(null);
-    // !! converts value to boolean true, when isModalOpen activeItemId is true 
-    const isModalOpen = !!activeItemId;
+    // !! converts value to boolean true, when isModalOpen activeItemId is true
+    const isModalOpen = !!activeItemId; // assign TRUE if id is set
     // from serachresults find id which is equals to activeitemid 
     const activeItem = searchResults.find(searchResult => searchResult.id === activeItemId);
-    const activeItemStr = JSON.stringify(activeItem)
+    let activeItemStr = ""; //JSON.stringify(activeItem)
 
+    const generateSideEffectString = row_id => {
+        console.log(row_id);
+
+        // set activeItem to the ID that was clicked
+        setActiveItemId(row_id);
+
+        //
+        console.log(activeItem);
+
+        let sfx_txt = ""; // accumulator string
+
+        // take side_effects list from active time,
+        //  for each side_effect element
+        //      append side_effect_name to "accumulator string"
+
+        // activeItem.side_effects.forEach()
+
+        activeItem["side_effects"].forEach(
+            element => sfx_txt += ", " + element["side_effect_name"]
+            console.log(element["side_effect_name"])
+        );
+
+        // assign accumulator to string which will be printed
+        activeItemStr = sfx_txt
+    };
 
     const onButtonClick = React.useCallback((e) => {
         // by default onsubmit is request thats why we need event prevent Default
@@ -91,6 +116,7 @@ function App() {
                 <button type="submit" id="button">Submit</button>
                 {/* searchResults.map function iterates through all searchResults and render it inside ul element, return a li element for each medication name*/}
                 <table id="results">
+
                     <thead>
                         <tr >
                             <th>Medication</th>
@@ -98,6 +124,8 @@ function App() {
                             <th>Date on market</th>
                         </tr>
                     </thead>
+
+
                     <tbody>
                         {searchResults.map(row => (
                             <tr key={row.id}>
@@ -105,7 +133,8 @@ function App() {
 
                                     {/* click button to open modal window,  */}
 
-                                    <button onClick={() => setActiveItemId(row.id)} id="modal_button">More Info</button>
+                                    <button onClick={() => generateSideEffectString(row.id)} id="modal_button">More Info</button>
+
                                     {/* when modal is open  */}
                                     {isModalOpen && (
                                         <div>
@@ -123,6 +152,8 @@ function App() {
 
                         )}
                     </tbody>
+
+
                 </table>
                 {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre> */}
             </form>
