@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ReactModal from 'react-modal';
+
 
 
 const drugsData = {
@@ -54,18 +56,47 @@ function App() {
     // handleChange method takes event as argument and sets the value to the searchTerm state using SetSearchTerm, provided in React.useState method 
     const handleChange = e => {
         setSearchTerm(e.target.value);
+        console.log(e.target.value)
     };
+    
 
 
     // to get active id of medication(when we click to open modal)
     const [activeItemId, setActiveItemId] = React.useState(null);
-    // !! converts value to boolean true, when isModalOpen activeItemId is true 
-    const isModalOpen = !!activeItemId;
+    // !! converts value to boolean true, when isModalOpen activeItemId is true
+    const isModalOpen = !!activeItemId; // assign TRUE if id is set
     // from serachresults find id which is equals to activeitemid 
-    const activeItem = searchResults.find(searchResult => searchResult.id === activeItemId);
-    const activeItemStr = JSON.stringify(activeItem)
-    console.log(activeItem)
+    const activeItem = searchResults.find(searchResult => searchResult.id == activeItemId);
+    let activeItemStr = ""; //JSON.stringify(activeItem)
 
+    const generateSideEffectString = row_id => {
+        console.log(row_id);
+        console.log(typeof row_id)
+        console.log(searchResults)
+        // set activeItem to the ID that was clicked
+        setActiveItemId(row_id);
+        setTimeout(() => { console.log("World!"); }, 2000);
+        //
+        console.log(activeItem);
+        console.log(activeItemId)
+        console.log(searchResults.find(searchResult => searchResult.id == activeItemId))
+
+        let sfx_txt = ""; // accumulator string
+
+        // take side_effects list from active time,
+        //  for each side_effect element
+        //      append side_effect_name to "accumulator string"
+
+        // activeItem.side_effects.forEach()
+
+        activeItem.side_effects.forEach(side_effect => 
+        {sfx_txt += ", " + side_effect.side_effect_name},
+            console.log(activeItem)
+        );
+
+        // assign accumulator to string which will be printed
+        activeItemStr = sfx_txt
+    };
 
     const onButtonClick = React.useCallback((e) => {
         // by default onsubmit is request thats why we need event prevent Default
@@ -92,6 +123,7 @@ function App() {
                 <button type="submit" id="button">Submit</button>
                 {/* searchResults.map function iterates through all searchResults and render it inside ul element, return a li element for each medication name*/}
                 <table id="results">
+
                     <thead>
                         <tr >
                             <th>Medication</th>
@@ -99,6 +131,8 @@ function App() {
                             <th>Date on market</th>
                         </tr>
                     </thead>
+
+
                     <tbody>
                         {searchResults.map(row => (
                             <tr key={row.id}>
@@ -106,17 +140,17 @@ function App() {
 
                                     {/* click button to open modal window,  */}
 
-                                    <button onClick={() => setActiveItemId(row.id)} id="modal_button">More Info</button>
+                                    <button onClick={() => generateSideEffectString(row.id)} id="modal_button">More Info</button>
+
                                     {/* when modal is open  */}
-                                    {isModalOpen && (
-                                        <div>
-                                            {/*{activeItem.medications.side_effects}*/}
-                                            {/*{activeItemStr.side_effects}*/}
-                                            <ul>{activeItemStr.side_effect_name}</ul>
-                                            {/* button to close modal window  */}
-                                            <button onClick={() => setActiveItemId(null)} id="modal_button">Close</button>
-                                        </div>  
-                                    )}
+                                    <ReactModal 
+                                    isOpen={isModalOpen}
+                                    ariaHideApp={false}
+                                    >      
+                                    {activeItemStr}
+                                     {/* button to close modal window  */}                                  
+                                     <button onClick={() => setActiveItemId(null)} id="modal_button">Close</button>
+                                    </ReactModal>
                                 </td>
 
                                 <td>{row.manufacturer}</td>
@@ -126,6 +160,8 @@ function App() {
 
                         )}
                     </tbody>
+
+
                 </table>
                 {/*<pre>{JSON.stringify(searchResults, null, 2)}</pre> */}
             </form>
