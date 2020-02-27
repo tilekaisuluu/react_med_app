@@ -64,6 +64,7 @@ function App() {
     // from serachresults find id which is equals to activeitemid 
     const activeItem = searchResults.find(searchResult => searchResult.id === activeItemId);
     const activeItemStr = JSON.stringify(activeItem)
+    console.log(activeItem)
 
 
     const onButtonClick = React.useCallback((e) => {
@@ -109,10 +110,12 @@ function App() {
                                     {/* when modal is open  */}
                                     {isModalOpen && (
                                         <div>
-                                            <ul>{activeItemStr}</ul>
+                                            {/*{activeItem.medications.side_effects}*/}
+                                            {/*{activeItemStr.side_effects}*/}
+                                            <ul>{activeItemStr.side_effect_name}</ul>
                                             {/* button to close modal window  */}
                                             <button onClick={() => setActiveItemId(null)} id="modal_button">Close</button>
-                                        </div>
+                                        </div>  
                                     )}
                                 </td>
 
